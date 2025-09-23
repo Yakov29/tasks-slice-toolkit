@@ -1,32 +1,27 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { removeTask } from "../../redux/actions";
 
 const List = () => {
-  const tasks = useSelector((state) => state.tasks)
-  console.log(tasks);
+  const tasks = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
 
-//   return (
-//     <ul className="list__list">
-//       {tasks.map((element) => {
-//         return (
-//           <li className="list__item">
-//             <input type="checkbox" className="list__input" />
-//             <p className="list__text">{element.text}</p>
-//           </li>
-//         );
-//       })}
-//     </ul>
-//   );
-
-
-return <ul className="list">
-    {console.log(tasks)}
-    {/* {tasks.map((element) => {
-        return <li className="list__item">
-        <p className="">{element.text}</p>
-    </li>
-    })} */}
-</ul>
+  return (
+    <ul className="list__list">
+      {tasks.map((element) => (
+        <li className="list__item" key={element.id}>
+          <input type="checkbox" className="list__input" checked={element.completed} readOnly />
+          <p className="list__text">{element.text}</p>
+          <button
+            className="list__remove"
+            onClick={() => dispatch(removeTask(element.id))}
+          >
+            ❌
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 export default List;
