@@ -1,13 +1,14 @@
-export const addTask = (text) => ({
+export const addTask = (task) => ({
   type: "addTask",
-  payload: {
-    id: Date.now(),
-    text: text || "",
-    completed: false,
-  },
+  payload: task,
 });
 
-export const removeTask = (id) => ({ type: "removeTask", payload: id });
-export const toggleTask = (id) => ({ type: "toggleTask", payload: id });
-export const setFilter = (filter) => ({ type: "setFilter", payload: filter });
-export const setFilterText = (text) => ({ type: "setFilterText", payload: text });
+export const removeTask = (taskId) => ({
+  type: "removeTask",
+  payload: taskId,
+});
+
+export const filterTask = (text) => ({
+  type: "filterTask",
+  payload: text,
+});

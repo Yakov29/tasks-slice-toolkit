@@ -1,52 +1,60 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addTask, setFilterText } from "../../redux/actions";
+import { useState } from "react";
+import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import { addTask, removeTask, filterTask } from "../../redux/actions";
 
 const Head = () => {
-  const tasks = useSelector((state) => state.tasks);
-  const filterText = useSelector((state) => state.filterText);
   const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks);
+  const [inputValue, setInputValue] = useState("");
 
-  const [newTask, setNewTask] = useState("");
+  const handleAdd = () => {
+    const title = inputValue.trim();
+    if (!title) return;
 
-  const activeTasks = tasks.filter((task) => !task.completed).length;
-  const completed = tasks.filter((task) => task.completed).length;
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    if (newTask.trim() === "") return;
-    dispatch(addTask(newTask.trim()));
-    setNewTask("");
+    dispatch(addTask({ id: nanoid(), title, completed: false }));
+    setInputValue("");
   };
 
+  const handleRemove = (taskId) => {
+    dispatch(removeTask(taskId));
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault()
+    const value = e.target.text.value
+    dispatch(filterTask(value))
+
+  }
+
   return (
-    <section className="head">
-      <h3 className="head__title">Задачі</h3>
-      <p className="head__data">Активні: {activeTasks}</p>
-      <p className="head__data">Виконані: {completed}</p>
+    <header className="header">
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Назва таску"
+      />
+      <button onClick={handleAdd}>Додати</button>
 
-      <form onSubmit={handleAdd} style={{ marginBottom: "10px" }}>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Введіть нову задачу"
-        />
-        <button type="submit">Додати</button>
+      <form onSubmit={handleSend}>
+        <h3>Фiльтер</h3>
+        <input type="text" placeholder="text" name="text" />
+        <button type="submit">Фiльтрувати</button>
       </form>
 
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          placeholder="Пошук за назвою"
-          type="text"
-          value={filterText}
-          onChange={(e) => dispatch(setFilterText(e.target.value))}
-        />
-        <button type="button" onClick={() => dispatch(setFilterText(""))}>
-          Скинути
-        </button>
-      </form>
-    </section>
+      <div>
+        {tasks.map((task) => (
+          <div
+            key={task.id}
+            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+          >
+            <span>{task.title}</span>
+            <button onClick={() => handleRemove(task.id)}>✖️</button>
+          </div>
+        ))}
+      </div>
+    </header>
   );
 };
 
