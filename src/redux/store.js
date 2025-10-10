@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "./reducer";
 import { tasksReducer } from "./reducer";
 
 
