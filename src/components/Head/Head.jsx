@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, removeTask, filterTask } from "../../redux/actions";
 
+import "./Head.css"
+
 const Head = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
@@ -30,6 +32,7 @@ const Head = () => {
   return (
     <header className="header">
       <input
+      className="header__input"
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}

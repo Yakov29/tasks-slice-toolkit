@@ -1,8 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { addTask } from "./actions";
+import { addTask, removeTask, filterTask } from "./actions";
 
 const initialState = JSON.parse(localStorage.getItem("tasks")) || [];
-
 
 // export const tasksReducer = (state = initialState, action,) => {
 //   switch (action.type) {
@@ -32,10 +31,21 @@ const initialState = JSON.parse(localStorage.getItem("tasks")) || [];
 // };
 
 export const tasksReducer = createReducer(initialState, (builder) => {
-  builder.addTask(addTask, (state, action) => {
-    const newState = [...state, action.payload];
-    localStorage.setItem("tasks", JSON.stringify(newState));
-    state = [...state, action.payload]
-    // return newState;
-  });
+  builder
+    .addCase(addTask, (state, action) => {
+      const newState = [...state, action.payload];
+      localStorage.setItem("tasks", JSON.stringify(newState));
+      return newState;
+    })
+    .addCase(removeTask, (state, action) => {
+      const newState = state.filter((task) => task.id !== action.payload);
+      localStorage.setItem("tasks", JSON.stringify(newState));
+      return newState;
+    })
+    .addCase(filterTask, (state, action) => {
+      const oldState = JSON.parse(localStorage.getItem("tasks"));
+      const newState = oldState.filter((task) => task.title === action.payload);
+      console.log(action.payload);
+      return newState;
+    })
 });
